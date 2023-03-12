@@ -1,0 +1,23 @@
+## Powershell Introduction:
+It is task automation framework build on .Net framework to provide a uniform command line experience to administrators and other folks who wants to control and configure the system.
+
+Powershell commands provide Verb-noun syntax.
+
+Examples:
+- get-process
+- start-process
+- get-Content
+- start-process
+
+Its a uniform method to access registry, environment variabbles, or drives. Get-psdrive whould list the read and virtual drives which powershell uses. 
+
+Powershell Command types:
+
+Alias
+Cmdlet
+Functions
+Scripts
+Executable or Binary which are present in PATH
+
+Pipelining in powershell is a concept to sent the output of a cmdlet/function to another set of cmdlet/function using |. Unlike unix the data passed in pipe are objects rather then text.
+
