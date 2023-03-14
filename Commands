@@ -1,0 +1,204 @@
+#######################################################
+Powershell commands are in the form of verb and noun.
+######################################################
+* List of process
+- get-process
+
+To grep properties and method of process
+- (get-process)| get-member
+
+To get threads out of (get-process)| get-member.
+- (get-process).threads
+
+=============
+Sort command
+=============
+For ascending order:
+- get-process | Sort-object -Property Handles
+
+For descending order:
+- get-process | Sort-object -Property Handles -Descending
+
+** List files and directory on drive
+- Get-childitem -path <path>
+
+** List out all drives
+- Get-PSDrive
+
+** Check powershell version
+- $PSVersionTable
+
+** To record the command
+- Start-Transcript -path C:\temp\file1.txt
+
+** To stop command recording
+- Stop-Transcript
+
+** To list all commands in the system
+Get-Command
+
+** To check if we can run any scripts from certain directory.
+- Get-ExecutionPolicy
+
+There are three environments in powershell scripts execution and they are:
+- Restricted (Don't run any scripts)
+- All Sign (can run all scripts which are digitally signed.)
+- RemoteSigned ( You can run scripts if remote scritps are signed. local scritps may not be sighned at it may be restricted.)
+- Unstricted ( You can run any scripts without any sign in or remote.)
+
+** Set execution Policy on restricted admin role of powershell to have it able to execute powershell scripts from anywhere.
+- Set-ExecutionPolicy RemoteSigned
+
+** To get alais for command in powershell
+- get-alias
+
+** To know what alias does
+- get-alias | findstr /s pwd
+
+** To know current process working in the system
+- get-alias | findstr /s gps
+
+** To know process how many alias command we have for process (ps)
+- get-alias | findstr /s ps
+
+** To set alias for any command
+- set-alias cwd Get-location
+
+** To go to another location and do some work and get back to previous location we can do that this way:
+
+- pushd . ( what ever current directory is push that into a stack.) 
+You can use it when you want to jump back to previous directory. 
+
+-popd : it brings you back to the directory where you set pushd.
+
+=============
+Get-Commands
+=============
+
+** To list out all the child items of folders inside of the folders.
+- Get-Childitems -path <path_name> -recurse (this command will not work on command prompt because it has an alias created for prompt which is dir.)
+
+** To get output in proper format.
+- Get-ChildItem -path C:/temp |format-list
+- Get-Childitem -path C:\temp -Recurse | format-list
+- Get-Childitem -path C:\temp -Recurse | format-table
+- Get-Childitem -path C:\temp -Recurse | format-wide
+
+** To get event log of system.
+- Get-Eventlog -logname system -Entrytype Error| format-list |more
+- Get-Eventlog -logname system -Entrytype Error| format-table |more
+- Get-Eventlog -logname system -Entrytype Error| format-wide |more
+
+Note: You can write strings directly to the terminal instead of echo or print in powershell.
+
+** To get unique objects from string.
+- "hello", "hello", "cello", "mello" | Get_Unique
+
+** Using Get commands.
+- Get-command | Get-member
+- (Get-command).count
+- Get-command -CommandType Cmdlet
+- (Get-command -CommandType Cmdlet).count
+
+Note: There are cmdlet and functions in the powershell system. Functions are the given by system or it can also be written which needs basic to advance work. 
+Light weight fucntionality is cmdlets. Depending upon number of components installed in the system, number of commands will vary. From microsoft there is a requirements 
+that any component or third party library which builds, they need to support powershell commands. 
+
+** Using get command for help and parameter.
+- get-help Get-Command -Parameter *
+
+
+====================
+Process manipulation
+====================
+
+- Get-command -CommandType Cmdlet -Name *process*
+- Get-command -CommandType Cmdlet -Name *service* | Measure-object
+
+=============
+File Handling
+=============
+
+** To create new directory in the path
+- New-Item C:\temp\PScripts\newfolder -type Directory
+
+** To create new file in the path
+- New-Item C:\temp\PScripts\file.ps1 -type file
+
+** To replace old file with the new file
+- New-Item C:\temp\PScripts\file.ps1 -type file -force
+
+** To enter value in the file
+- New-Item -path C:\temp\PScripts\file.ps1 -type file -force -value "(get-command).count"
+
+** To get content of the file.
+- Get-content -path C:\temp\PScripts\file.ps1
+
+** Seting up variables with content of the file that has lines inside.
+- $myline = Get-content -path C:\temp\PScripts\file.ps1
+
+** Getting output line number 1 from the file.
+- $myline[1]
+
+** To remove everything inside a folder
+- Remove-Item <path_of_dir> -Recurse
+
+** Delete everything in the directory excluding certain file extention (eg; .mp3)
+- Remove-Item <path_to_dir>\* -exclude *.mp3
+
+** Delete these extension files:
+- Remove-Item <path_to_dir>\* -include *.cpp,*.h
+
+** Rename file:
+- Rename-Item <path_to_dir>\a.data <path_to_dir>\b.data
+or
+- Rename-Item <path_to_dir>\a.data b.data
+
+** Move file to different location:
+- Move-Item '<path_to_dir>\a.data' c:\temp
+
+** Copy file to directory
+- Copy-Item <path_to_dir>\a.data <path_to_dir>\b.data
+
+** To test if certain file/dir exist to the path:
+- Test-Path <path_to_file/dir> 
+
+===================
+Sort and grouping
+===================
+
+** To sort object according to ascending order.
+- Get-process | sort-object PM 
+
+** To sort object on decending order.
+- Get-process | sort-object PM descending
+
+** Get only first 20 lines of event.
+- Get-EventLog -logname system -newest 20
+
+** Define parameter for query:
+- $myvar = Get-Eventlog -logname system -newest 20
+
+- $myvar |Group-object -Property source | format-list 
+- $myvar |Group-object -Property source | sort-object -Property count
+- $myvar |Group-object -Property source | sort-object -Property count -Descending
+
+==============================================
+Selecting object and iterating for each object
+==============================================
+
+- Get-ChildItem c:\temp | Get-Member ( to check what all objects file can have.)
+- Get-ChildItem c:\temp | Select-Object Name,LastAccessTime
+- Get-ChildItem c:\temp| Select-Object Name,{$_.creationTime.Year}
+- Get-ChildItem C:\temp | select-object {write-host "the last access time is" $_.lastaccesstime}
+
+Note: here "$_." represent for each item in the command. 
+
+
+
+
+
+
+
+
+
