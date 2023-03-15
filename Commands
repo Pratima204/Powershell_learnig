@@ -192,7 +192,112 @@ Selecting object and iterating for each object
 - Get-ChildItem c:\temp| Select-Object Name,{$_.creationTime.Year}
 - Get-ChildItem C:\temp | select-object {write-host "the last access time is" $_.lastaccesstime}
 
-Note: here "$_." represent for each item in the command. 
+Note: here "$_." represent for each element/item in the command. 
+
+------------
+write host
+----------
+
+* Write content on host.
+- write-host "Hi there" -ForegroundColor red
+- write-host "Hi there" -ForegroundColor red -BackgroundColor White
+
+Note: Foreach-object: Iterates for each object.
+
+- Get-ChildItem | ForEach-Object {Write-Host " access time is "$_.LastAccessTime}
+
+------------
+where object
+------------
+** Get all the files in dir where .sys extension files length is less then 69632.
+- Get-ChildItem *.sys |Where-Object {$_.length -lt 69632}
+- Get-EventLog -LogName System -Newest 100 | Group-object -Property Source
+
+------------
+Get-process
+------------
+
+- Get-Process [n]*[d]
+- Get-Process [a-z]*[x-y]
+- Get-Process [n]*[d] | Stop-Process -whatif (dry-run)
+- Get-Process [n]*[d] | Stop-Process
+- (Get-Process -name notepad).kill()
+- Get-process | ConvertTo-HTML -property Handles, ProcessName
+- Get-process | ConvertTo-HTML -property Handles, ProcessName >c:\temp\processlist.html (exporting output to html file.)
+
+Note: There are various ways in which you can manipulate an object. They are Select-object, sort-object, measure-object. Select-object is like a filter. 
+
+- Get-process | Select-Object Handles, Processname | Export-Csv c:\temp\processName.csv
+
+-----------
+EventLog
+----------
+
+- Get-Eventlog -list (This gives list of all the events.)
+- Get-Eventlog -Newest 2 -Logname "Application"
+- Get-Eventlog -Newest 2 -Logname "Application" | format-list
+- stop-process -Name notepad++
+- get-process -Name notepad
+- Stop-process -ID 9064
+- get-service
+- (get-service)| Measure-object
+
+----------
+Networking
+----------
+
+- get-service -Name *net*
+- get-service
+- get-service | findstr /s /I net
+
+---------------
+String Handling
+---------------
+
+
+---------------------
+Environment variable
+---------------------
+
+** To list environment value of os.
+- $env:os
+
+** To set the environment variable with name zshkil.
+- $env:zshakil - "Hi there"
+
+** To remove environment variable.
+- Remove-Item $env:zshakil
+
+** To add path to the environment variable.
+- $env:path = $env:path + ";C:\Program Files\mybin"  Note: Do not forget to do ($env:path +) in the formula.
+
+** Set persistent environment variable.
+- [Environment]::SetEnvironmentVariable("prati","is class1","User")
+
+** To get environment variable.
+- [Environment]::GetEnvironmentVariable("prati","User")
+
+Note: Permanent variable might not be saved until powershell gets restarted.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
