@@ -279,6 +279,9 @@ Environment variable
 
 Note: Permanent variable might not be saved until powershell gets restarted.
 
+** Remove permanent environment variable.
+- [Environment]::SetEnvironmentVariable("prati",$null,"User")
+
 
 
 
